@@ -43,6 +43,7 @@ Route::group(['namespace' => 'APIs', 'prefix' => 'api/v1', 'as' => 'api.v1.', 'm
 
     Route::group(['middleware' => 'auth:api'], function() {
         Route::get('user', 'AuthController@getUser');
+        Route::get('bank/list', ['as' => 'bank.list', 'uses' => 'BankController@listAll']);
     });
 
 });
