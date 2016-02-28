@@ -16,14 +16,27 @@ class BankController extends APIController {
 
     public function listAll()
     {
-        $data = $this->bank->all();
+        $banks = $this->bank->all();
 
-        if( !$data ) {
+        if( !$banks ) {
             return $this->respondNotFound("Don't have any banks");
         }
 
         return $this->respond(
-            $this->bankTransformer->transformCollection($data)
+            $this->bankTransformer->transformCollection($banks)
+        );
+    }
+
+    public function getBank($id)
+    {
+        $bank = $this->bank->find($id);
+
+        if( !$bank ) {
+            return $this->respondNotFound("The bank not found");
+        }
+
+        return $this->respond(
+            $this->bankTransformer->transform($bank->toArray())
         );
     }
 

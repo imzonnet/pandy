@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
-class AuthRequest extends Request
+class InfoRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +22,10 @@ class AuthRequest extends Request
     public function rules()
     {
         return [
-            'email' => 'required, email'
+            'loan_amount' => 'required',
+            'interest_rate' => 'required',
+            'switching_costs' => 'required',
+            'ongoing_costs' => 'required',
         ];
     }
 }

@@ -42,6 +42,14 @@ class APIController extends Controller {
             ]
         ]);
     }
-
+    public function respondWithSuccess($message)
+    {
+        return $this->respond([
+            'success' => [
+                'message' => $message,
+                'status_code' => $this->getStatusCode()
+            ]
+        ]);
+    }
 
 }

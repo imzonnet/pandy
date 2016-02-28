@@ -31,6 +31,6 @@ class CreateBanks extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('banks');
     }
 }

@@ -2,8 +2,7 @@
 
 namespace App\Http\Requests;
 
-
-class BankRequest extends Request
+class RegisterRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +23,10 @@ class BankRequest extends Request
     {
         return [
             'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|unique:users,phone',
+            'loan_term' => 'required',
             'interest_rate' => 'required',
-            'comparison_rate' => 'required',
-            'annual_fees' => 'required',
-            'monthly_fees' => 'required',
-            'special' => 'required',
         ];
     }
 }

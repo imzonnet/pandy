@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->decimal('ongoing_costs');
             $table->integer('loan_term');
             $table->integer('number_of_payments');
+            $table->decimal('years_saved');
             $table->string('api_token', 60);
             $table->rememberToken();
             $table->timestamps();

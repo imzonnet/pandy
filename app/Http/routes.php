@@ -39,11 +39,18 @@ Route::group(['middleware' => ['web', 'auth.admin']], function () {
  * API Routes
  */
 Route::group(['namespace' => 'APIs', 'prefix' => 'api/v1', 'as' => 'api.v1.', 'middleware' => 'api'], function() {
+    Route::post('register', ['as' => 'register', 'uses' => 'AuthController@postRegisterUser']);
     Route::post('login', ['as' => 'login', 'uses' => 'AuthController@postLogin']);
 
     Route::group(['middleware' => 'auth:api'], function() {
-        Route::get('user', 'AuthController@getUser');
-        Route::get('bank/list', ['as' => 'bank.list', 'uses' => 'BankController@listAll']);
+        /** User Info */
+        Route::get('user/info', ['as' => 'user.info', 'uses' => 'AuthController@getInfo']);
+        Route::post('user/info', ['as' => 'user.info.update', 'uses' => 'AuthController@postUpdateInfo']);
+        /** Banks */
+        Route::get('bank', ['as' => 'bank.list', 'uses' => 'BankController@listAll']);
+        Route::get('bank/{id}', ['as' => 'bank.get', 'uses' => 'BankController@getBank']);
+        /** Loan */
+
     });
 
 });
