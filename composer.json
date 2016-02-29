@@ -22,7 +22,10 @@
         ],
         "psr-4": {
             "App\\": "app/"
-        }
+        },
+        "files" : [
+            "app/Libs/BankHelper.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [

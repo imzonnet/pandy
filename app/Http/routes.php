@@ -49,8 +49,15 @@ Route::group(['namespace' => 'APIs', 'prefix' => 'api/v1', 'as' => 'api.v1.', 'm
         /** Banks */
         Route::get('bank', ['as' => 'bank.list', 'uses' => 'BankController@listAll']);
         Route::get('bank/{id}', ['as' => 'bank.get', 'uses' => 'BankController@getBank']);
+
         /** Loan */
+        Route::get('loan/save', ['as' => 'bank.get', 'uses' => 'BankController@getBankSave']);
+
+        Route::get('loan/oldPaymentSave', ['as' => 'bank.old-payment-save', 'uses' => 'BankController@getOldPaymentSave']);
+        Route::get('loan/newPaymentSave', ['as' => 'bank.new-payment-save', 'uses' => 'BankController@getNewPaymentSave']);
+        Route::get('loan/interestPayment', ['as' => 'bank.interestPayment', 'uses' => 'BankController@getInterestPayment']);
+
+
 
     });
-
 });
