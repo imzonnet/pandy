@@ -58,43 +58,82 @@ class BankController extends APIController {
 
     }
 
-    public function getBankSave(Request $request)
-    {
-        $user = Auth::guard('api')->user();
-        $loanAmount = $request->get('loan_amount', $user->loan_amount);
-        $interestRate = $request->get('interest_rate', $user->interest_rate);
-        $loanTerm = $request->get('loan_term', $user->loan_term);
-
-        $oldMonthlyPayment = $this->bankHelper->monthlyPayment($interestRate, $loanTerm, $loanAmount);
-        $newMonthlyPayment = (float)$oldMonthlyPayment + (float)$request->get('extra_payment', 127) ;
-        $numberOfPayments = $this->bankHelper->numberOfPayments($interestRate, $newMonthlyPayment, $loanAmount);
-
-    }
-
     /**
-     * Get Old Payment Save
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getOldPaymentSave()
-    {
-        return $this->respond((float)$this->bankHelper->monthlyPayment());
-    }
-
-    /**
-     * Get New Payment Save
+     * How much can save?
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getNewPaymentSave(Request $request)
+    public function getBankSave(Request $request)
     {
-        $new = $this->bankHelper->monthlyPayment() + $request->get('extra_payment');
-        return $this->respond((float)$new);
+        /** Set Value */
+        $user = Auth::guard('api')->user();
+        $loanAmount = $request->get('loan_amount', $user->loan_amount);
+        $interestRate = $request->get('interest_rate', $user->interest_rate);
+        $loanTerm = $request->get('loan_term', $user->loan_term);
+        $extraPayment = (float)$request->get('extra_payment', 0);
+
+        /** Calc */
+        $oldMonthlyPayment = $this->bankHelper->monthlyPayment($interestRate, $loanTerm, $loanAmount);
+        $newMonthlyPayment = (float)$oldMonthlyPayment + $extraPayment;
+        $numberOfPayments = $this->bankHelper->numberOfPayments($interestRate, $newMonthlyPayment, $loanAmount);
+        //total interest no extra payment
+        $totalInterestNoExtraPayments = $this->bankHelper->totalInterestNoExtraPayments($interestRate, $loanTerm, $loanAmount);
+        //total interest extra payment
+        $totalInterestExtraPayments = $this->bankHelper->totalInterestExtraPayments($interestRate, $numberOfPayments, $newMonthlyPayment, $loanAmount);
+        $refiAndSave = ($totalInterestNoExtraPayments - $totalInterestExtraPayments) / $loanTerm / 12;
+        $yearSaved = $loanTerm - $numberOfPayments / 12;
+
+        return $this->respond([
+            'status' => true,
+            'old_monthly_payment' => $oldMonthlyPayment,
+            'new_monthly_payment' => $newMonthlyPayment,
+            'number_of_payments' => $numberOfPayments,
+            'total_interest_no_extra_payments' => $totalInterestNoExtraPayments,
+            'total_interest_extra_payments' => $totalInterestExtraPayments,
+            'refi_and_Save' => $refiAndSave,
+            'year_saved' => $yearSaved,
+            'loan_amount' => $loanAmount,
+            'loan_term' => $loanTerm,
+            'interest_rate' => $interestRate,
+        ]);
     }
 
-    public function getMonthPayment(Request $request) {
-        return $this->getNewPaymentSave($request);
-    }
+    public function paymentCalculator(Request $request)
+    {
+        /** Set Value */
+        $user = Auth::guard('api')->user();
+        $loanAmount = $request->get('loan_amount', $user->loan_amount);
+        $interestRate = $request->get('interest_rate', $user->interest_rate);
+        $loanTerm = $request->get('loan_term', $user->loan_term);
+        $extraPayment = (float)$request->get('extra_payment', 0);
+        $currentMonth = (float)$request->get('current_month_payment', 1);
 
+        /** Calc */
+        $oldMonthlyPayment = $this->bankHelper->monthlyPayment($interestRate, $loanTerm, $loanAmount);
+        $newMonthlyPayment = (float)$oldMonthlyPayment + $extraPayment;
+        $numberOfPayments = $this->bankHelper->numberOfPayments($interestRate, $newMonthlyPayment, $loanAmount);
+
+        /** Get new loan amount of a month before */
+        $newLoanAmount = $this->bankHelper->getLoanAmountOfMonth($currentMonth, $interestRate, $newMonthlyPayment, $loanAmount);
+
+        /** Get interest payment and principal payment of current month */
+        $interestPayment = $this->bankHelper->interestPayment($interestRate, $newLoanAmount);
+        $principalPayment = $this->bankHelper->principalPayment($newMonthlyPayment, $interestPayment);
+
+        /** Get Current Monthly Payment */
+        $currentMonthlyPayment = $this->bankHelper->currentMonthlyPayment($currentMonth, $numberOfPayments, $newMonthlyPayment, $interestRate, $newLoanAmount);
+
+        return $this->respond([
+            'status' => true,
+            'loan_amount' => (float)$loanAmount,
+            'loan_term' => $loanTerm,
+            'current_month_payment' => $currentMonth,
+            'interest_rate' => (float)$interestRate,
+            'interest_payment' => $interestPayment,
+            'principal_payment' => $principalPayment,
+            'monthly_payment' => $currentMonthlyPayment
+        ]);
+    }
 
 }

@@ -8,7 +8,6 @@
 
 namespace App\Libs;
 
-
 use Illuminate\Support\Facades\Auth;
 
 class BankHelper
@@ -21,7 +20,8 @@ class BankHelper
      * @param $loan
      * @return float
      */
-    public function pmt($interest, $months, $loan) {
+    public function pmt($interest, $months, $loan)
+    {
         $interest = $interest / 1200;
         $amount = $interest * -$loan * pow((1 + $interest), $months) / (1 - pow((1 + $interest), $months));
         return $amount;
@@ -29,13 +29,15 @@ class BankHelper
 
     /**
      * Calc monthly payment
-     * @param $interest_rate
-     * @param $loan_term
-     * @param $loan_amount
+     *
+     * @param $interestRate
+     * @param $loanTerm
+     * @param $loanAmount
      * @return float
      */
-    public function monthlyPayment($interest_rate, $loan_term, $loan_amount) {
-        return $this->pmt($interest_rate, $loan_term * 12, $loan_amount);
+    public function monthlyPayment($interestRate, $loanTerm, $loanAmount)
+    {
+        return $this->pmt($interestRate, $loanTerm * 12, $loanAmount);
     }
 
     /**
@@ -50,27 +52,108 @@ class BankHelper
     {
         return ceil($this->NPer($interestRate, $newMonthlyPayment, -$loanAmount));
     }
-    
-       /**
+
+    /**
+     * Get Total Interest Payments
+     *
+     * @param $interestRate
+     * @param $loanTerm
+     * @param $loanAmount
+     *
+     * @return float
+     */
+    public function totalInterestNoExtraPayments($interestRate, $loanTerm, $loanAmount)
+    {
+        return -\PHPExcel_Calculation_Financial::CUMIPMT($interestRate / 1200, $loanTerm * 12, $loanAmount, 1, $loanTerm * 12);
+    }
+
+    /**
+     * @param $interestRate
+     * @param $numberOfPayments
+     * @param $newMonthlyPayment
+     * @param $loanAmount
+     * @return float|int
+     */
+    public function totalInterestExtraPayments($interestRate, $numberOfPayments, $newMonthlyPayment, $loanAmount)
+    {
+        $total = 0;
+        $newLoanAmount = $loanAmount;
+        for ($i = 1; $i <= $numberOfPayments; $i++) {
+            $interestPayment = $this->interestPayment($interestRate, $newLoanAmount);
+            $total += $interestPayment;
+            if ($i == $numberOfPayments) {
+                $newMonthlyPayment = (1 + $interestRate / 1200) * $newLoanAmount;
+            }
+            $principalPayment = $this->principalPayment($newMonthlyPayment, $interestPayment);
+            $newLoanAmount = $newLoanAmount - $principalPayment;
+
+        }
+        return $total;
+    }
+
+    /**
+     * Get current loan amount of a month
+     *
+     * @param $currentMonth
+     * @param $interestRate
+     * @param $newMonthlyPayment
+     * @param $loanAmount
+     * @return mixed
+     */
+    public function getLoanAmountOfMonth($currentMonth, $interestRate, $newMonthlyPayment, $loanAmount)
+    {
+        $newLoanAmount = $loanAmount;
+        for ($i = 1; $i < $currentMonth; $i++) {
+            $interestPayment = $this->interestPayment($interestRate, $newLoanAmount);
+            $principalPayment = $this->principalPayment($newMonthlyPayment, $interestPayment);
+            $newLoanAmount = $newLoanAmount - $principalPayment;
+        }
+        return $newLoanAmount;
+    }
+
+    /**
      * Calc Interest Payment
      *
      * @param $balance
-     * @param $interest_rate
+     * @param $interestRate
      * @return float
      */
-    public function interest($balance, $interest_rate) {
-        return $interest_rate / 1200 * $balance;
+    public function interestPayment($interestRate, $balance)
+    {
+        return $interestRate / 1200 * $balance;
     }
 
     /**
      * Get Principal
      *
-     * @param $monthly_payment
-     * @param $interest_payment
+     * @param $monthlyPayment
+     * @param $interestPayment
      * @return mixed
      */
-    public function principal($monthly_payment, $interest_payment) {
-        return $monthly_payment - $interest_payment;
+    public function principalPayment($monthlyPayment, $interestPayment)
+    {
+        return $monthlyPayment - $interestPayment;
+    }
+
+    /**
+     * Get Current Monthly Payment
+     *
+     * @param $currentMonth
+     * @param $numberOfPayments
+     * @param $monthlyPayment
+     * @param $interestRate
+     * @param $loanAmount
+     * @return int
+     */
+    public function currentMonthlyPayment($currentMonth, $numberOfPayments, $monthlyPayment, $interestRate, $loanAmount)
+    {
+        $currentMonthlyPayment = 0;
+        if( $currentMonth < $numberOfPayments ) {
+            $currentMonthlyPayment = $monthlyPayment;
+        } else if( $currentMonth == $numberOfPayments ) {
+            $currentMonthlyPayment = ( 1 + $interestRate / 1200 ) * $loanAmount;
+        }
+        return $currentMonthlyPayment;
     }
 
     /**
@@ -85,7 +168,8 @@ class BankHelper
      * @return float
      *
      */
-    function NPer($rate, $payment, $present, $future = 0, $type = 0) {
+    function NPer($rate, $payment, $present, $future = 0, $type = 0)
+    {
         $rate = $rate / 1200;
         $num = $payment * (1 + $rate * $type) - $future * $rate;
         $den = ($present * $rate + $payment * (1 + $rate * $type));
