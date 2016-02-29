@@ -32,6 +32,7 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::group(['middleware' => ['web', 'auth.admin']], function () {
     Route::get('/home', 'HomeController@index');
+    Route::get('/calculator', 'HomeController@calculator');
     Route::resource('bank', 'BankController', ['except' => ['show']]);
 });
 
