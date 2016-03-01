@@ -46,7 +46,7 @@ class APIController extends Controller {
     {
         return $this->respond([
             'status_code' => $this->getStatusCode(),
-            'data' =>$message
+            'message' => $message
         ]);
     }
 

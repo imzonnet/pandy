@@ -34,6 +34,7 @@ class AuthController extends APIController {
                 return $this->respond([
                     'login_state' => 200,
                     'name' => $user->name,
+                    'phone' => $user->phone,
                     'api_token' => $user->api_token
                 ]);
             }
@@ -55,10 +56,10 @@ class AuthController extends APIController {
     /**
      * Update user Information
      *
-     * @param InfoRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postUpdateInfo(InfoRequest $request)
+    public function postUpdateInfo(Request $request)
     {
         $user = Auth::guard('api')->user();
         $this->user->update($user, $request->all());
@@ -67,7 +68,7 @@ class AuthController extends APIController {
 
     public function postRegisterUser(RegisterRequest $request)
     {
-       $this->user->create($request->all());
+        $this->user->create($request->all());
         return $this->respondWithSuccess('The user information has been created');
     }
 

@@ -16,7 +16,7 @@ class AdminAuthenticate
      */
     public function handle($request, Closure $next)
     {
-        if( Auth::check() && Auth::user()->group == 0) {
+        if( Auth::check() && Auth::user()->group != 1) {
             return redirect()->guest('/')->withErrors('Don\'t have permission!');
         }
         return $next($request);

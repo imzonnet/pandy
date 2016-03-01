@@ -12,7 +12,7 @@ class BankTransformer extends Transformer
         $lastUpdate = Carbon::now()->diffInDays($updatedDate) . ' day';
         $lastUpdate .= $lastUpdate > 1 ? 's' : '';
         return [
-            "id" =>  1,
+            "id" =>  $bank['id'],
             "name" => $bank['name'],
             "interest_rate" => $bank['interest_rate'],
             "comparison_rate" => $bank['comparison_rate'],

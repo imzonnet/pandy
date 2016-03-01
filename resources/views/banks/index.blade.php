@@ -43,6 +43,8 @@
                                 </tr>
                             @endforeach
                         </table>
+                        <div class="clearfix"></div>
+                        {!! $banks->render() !!}
                     @else
                         <p>Don't have any banks</p>
                     @endif
