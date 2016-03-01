@@ -25,7 +25,7 @@
 
 Route::group(['middleware' => ['web']], function () {
     Route::get('/', function () {
-        return redirect('/home');
+        return view('welcome');
     });
     Route::auth();
     Route::get('/calculator', ['as' => 'calculator', 'uses' => 'HomeController@calculator']);
@@ -34,6 +34,7 @@ Route::group(['middleware' => ['web']], function () {
 Route::group(['middleware' => ['web', 'auth', 'auth.admin']], function () {
     Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
     Route::resource('bank', 'BankController', ['except' => ['show']]);
+    Route::resource('user', 'UserController', ['except' => ['show']]);
 });
 
 /**
@@ -50,10 +51,8 @@ Route::group(['namespace' => 'APIs', 'prefix' => 'api/v1', 'as' => 'api.v1.', 'm
         /** Banks */
         Route::get('bank', ['as' => 'bank.list', 'uses' => 'BankController@listAll']);
         Route::get('bank/{id}', ['as' => 'bank.get', 'uses' => 'BankController@getBank']);
-
         /** Loan */
         Route::get('loan/save', ['as' => 'loan.save', 'uses' => 'BankController@getBankSave']);
         Route::get('loan/calculator', ['as' => 'loan.calculator', 'uses' => 'BankController@paymentCalculator']);
-
     });
 });

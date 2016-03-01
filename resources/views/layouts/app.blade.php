@@ -48,6 +48,7 @@
                     <li><a href="{{ url('/home') }}">Dashboard</a></li>
                     @if (!Auth::guest())
                     <li><a href="{{ route('bank.index') }}">Banks</a></li>
+                    <li><a href="{{ route('user.index') }}">Users</a></li>
                     @endif
                     <li><a href="{{ route('calculator') }}">Mortgage Switching Calculator</a></li>
 
