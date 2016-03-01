@@ -53,6 +53,6 @@ Route::group(['namespace' => 'APIs', 'prefix' => 'api/v1', 'as' => 'api.v1.', 'm
         Route::get('bank/{id}', ['as' => 'bank.get', 'uses' => 'BankController@getBank']);
         /** Loan */
         Route::get('loan/save', ['as' => 'loan.save', 'uses' => 'BankController@getBankSave']);
-        Route::get('loan/calculator', ['as' => 'loan.calculator', 'uses' => 'BankController@paymentCalculator']);
+        Route::get('loan/calculator', ['as' => 'loan.calculator', 'uses' => 'BankController@loanCalculator']);
     });
 });

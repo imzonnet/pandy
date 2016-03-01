@@ -72,7 +72,7 @@ class BankController extends APIController {
         try {
             /** Set Value */
             $user = Auth::guard('api')->user();
-            $loanAmount = $request->get('loan_amount', $user->loan_amount);
+            $loanAmount = (float)$request->get('loan_amount', $user->loan_amount);
             $interestRate = $request->get('interest_rate', $user->interest_rate);
             $loanTerm = $request->get('loan_term', $user->loan_term);
             $extraPayment = (float)$request->get('extra_payment', 0);
@@ -85,21 +85,22 @@ class BankController extends APIController {
             $totalInterestNoExtraPayments = $this->bankHelper->totalInterestNoExtraPayments($interestRate, $loanTerm, $loanAmount);
             //total interest extra payment
             $totalInterestExtraPayments = $this->bankHelper->totalInterestExtraPayments($interestRate, $numberOfPayments, $newMonthlyPayment, $loanAmount);
+
             $refiAndSave = ($totalInterestNoExtraPayments - $totalInterestExtraPayments) / $loanTerm / 12;
             $yearSaved = $loanTerm - $numberOfPayments / 12;
 
             return $this->respond([
                 'status_code' => 200,
-                'old_monthly_payment' => $oldMonthlyPayment,
-                'new_monthly_payment' => $newMonthlyPayment,
+                'old_monthly_payment' => round($oldMonthlyPayment, 2),
+                'new_monthly_payment' => round($newMonthlyPayment, 2),
                 'number_of_payments' => $numberOfPayments,
-                'total_interest_no_extra_payments' => $totalInterestNoExtraPayments,
-                'total_interest_extra_payments' => $totalInterestExtraPayments,
-                'refi_and_Save' => $refiAndSave,
-                'year_saved' => $yearSaved,
-                'loan_amount' => $loanAmount,
-                'loan_term' => $loanTerm,
-                'interest_rate' => $interestRate,
+                'total_interest_no_extra_payments' => round($totalInterestNoExtraPayments, 2),
+                'total_interest_extra_payments' => round($totalInterestExtraPayments, 2),
+                'refi_and_Save' => round($refiAndSave, 2),
+                'year_saved' => round($yearSaved, 2),
+                'loan_amount' => (float)$loanAmount,
+                'loan_term' => (float)$loanTerm,
+                'interest_rate' => (float)$interestRate,
             ]);
 
         } catch(Exception $e) {
@@ -107,7 +108,7 @@ class BankController extends APIController {
         }
     }
 
-    public function paymentCalculator(Request $request)
+    public function loanCalculator(Request $request)
     {
         try {
             /** Set Value */
@@ -135,13 +136,13 @@ class BankController extends APIController {
 
             return $this->respond([
                 'status_code' => 200,
-                'loan_amount' => (float)$loanAmount,
-                'loan_term' => $loanTerm,
-                'current_month_payment' => $currentMonth,
+                'loan_amount' => round($loanAmount, 2),
+                'loan_term' => round($loanTerm, 2),
+                'current_month_payment' => round($currentMonth, 2),
                 'interest_rate' => (float)$interestRate,
-                'interest_payment' => $interestPayment,
-                'principal_payment' => $principalPayment,
-                'monthly_payment' => $currentMonthlyPayment
+                'interest_payment' => round($interestPayment, 2),
+                'principal_payment' => round($principalPayment, 2),
+                'monthly_payment' => round($currentMonthlyPayment, 2)
             ]);
         } catch(Exception $e) {
             return $this->respondWithError($e->getMessage());
