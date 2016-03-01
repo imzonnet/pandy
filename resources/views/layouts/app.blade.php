@@ -49,6 +49,8 @@
                     @if (!Auth::guest())
                     <li><a href="{{ route('bank.index') }}">Banks</a></li>
                     @endif
+                    <li><a href="{{ route('calculator') }}">Mortgage Switching Calculator</a></li>
+
                 </ul>
 
                 <!-- Right Side Of Navbar -->

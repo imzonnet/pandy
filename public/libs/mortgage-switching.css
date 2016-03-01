@@ -1,11 +1,12 @@
 #calculator-container { 
   background-color: #e7e7e7; 
   border: solid 2px #6B8C00; 
-  webkit-border-radius: 15px;
+  -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px; 
-  position: relative; behavior: url(/scripts/PIE.htc);
+  position: relative;
   overflow:hidden;
+  margin-bottom: 100px;
 }
 #calculator-container h2 {
   padding: 10px;
@@ -17,10 +18,10 @@
   background: -o-linear-gradient(#6B8C00, #7B9C10);
   background: linear-gradient(#6B8C00, #7B9C10);
   -pie-background: linear-gradient(#6B8C00, #7B9C10);
-  webkit-border-radius: 10px 10px 0 0;
+  -webkit-border-radius: 10px 10px 0 0;
   -moz-border-radius: 10px 10px 0 0;
   border-radius: 10px 10px 0 0;
-  position: relative; behavior: url(/scripts/PIE.htc);
+  position: relative;
   border-bottom: 0;
   color: white;
   margin: 0;
@@ -33,10 +34,9 @@
 #calculator-container label span { font-weight:normal; }
 #calculator-container .result-box {  
   background-color: white;
-  webkit-border-radius: 10px;
+  -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
-  behavior: url(/scripts/PIE.htc);
   position: relative;
   border: 1px solid #ccc;
   min-height: 270px;
@@ -54,7 +54,6 @@
   -moz-border-radius: 10px;
   border-radius: 10px;
   position: relative;
-  behavior: url(/scripts/PIE.htc);
   padding: 0.5em 10px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

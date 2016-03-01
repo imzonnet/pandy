@@ -28,11 +28,11 @@ Route::group(['middleware' => ['web']], function () {
         return view('welcome');
     });
     Route::auth();
+    Route::get('/calculator', ['as' => 'calculator', 'uses' => 'HomeController@calculator']);
 });
 
 Route::group(['middleware' => ['web', 'auth.admin']], function () {
-    Route::get('/home', 'HomeController@index');
-    Route::get('/calculator', 'HomeController@calculator');
+    Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
     Route::resource('bank', 'BankController', ['except' => ['show']]);
 });
 
