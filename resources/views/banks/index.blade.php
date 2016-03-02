@@ -33,10 +33,10 @@
                                     <td>{{ $bank->monthly_fees }}</td>
                                     <td>{{ $bank->special }}</td>
                                     <td>
-                                        {!! Form::open(['route' => ['bank.destroy', $bank->id], 'method' => 'delete', 'class' => 'form-delete']) !!}
+                                        {!! Form::open(['route' => ['bank.destroy', $bank->id], 'method' => 'delete']) !!}
                                         <div class="btn-group">
                                             <a href="{{ route('bank.edit', [$bank->id]) }}" class="btn btn-info btn-sm"><i class="fa fa-pencil"></i></a>
-                                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                            <button type="submit" class="btn btn-danger btn-sm form-delete"><i class="fa fa-trash"></i></button>
                                         </div>
                                         {!! Form::close() !!}
                                     </td>
