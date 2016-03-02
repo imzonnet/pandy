@@ -16,10 +16,10 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Interest Rate</th>
-                                <th>Comparison Rate</th>
-                                <th>Annual Fees</th>
-                                <th>Monthly Fees</th>
+                                <th>Interest Rate (%)</th>
+                                <th>Comparison Rate (%)</th>
+                                <th>Annual Fees ($)</th>
+                                <th>Monthly Fees ($)</th>
                                 <th>Special</th>
                                 <th>Actions</th>
                             </tr>
