@@ -13,7 +13,7 @@ class UserTableSeeder extends Seeder
     {
         \App\User::create([
             'name' => 'John Nguyen',
-            'email' => 'vnzacky39@gmail.com',
+            'email' => 'john@admin.com',
             'password' => bcrypt('123456'),
             'phone' => '12346789',
             'group' => 1,
@@ -25,9 +25,21 @@ class UserTableSeeder extends Seeder
         ]);
         \App\User::create([
             'name' => 'Jayden Vecchio',
-            'email' => 'jaydenvecchio39@gmail.com',
+            'email' => 'jaydenvecchio@admin.com',
             'password' => bcrypt('123456'),
             'phone' => '12346788',
+            'group' => 1,
+            'loan_amount' => 300900,
+            'interest_rate' => 5.5,
+            'switching_costs' => 2000,
+            'ongoing_costs' => 1500,
+            'loan_term' => 30,
+        ]);
+        \App\User::create([
+            'name' => 'Matt Dibb',
+            'email' => 'matt@admin.com',
+            'password' => bcrypt('123456'),
+            'phone' => '12346787',
             'group' => 1,
             'loan_amount' => 300900,
             'interest_rate' => 5.5,
