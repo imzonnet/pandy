@@ -66,9 +66,40 @@ class AuthController extends APIController {
         return $this->respondWithSuccess('The user information has been updated');
     }
 
-    public function postRegisterUser(RegisterRequest $request)
+    public function postRegisterUser(Request $request)
     {
-        $this->user->create($request->all());
+        $v = Validator::make($request->all(), [
+            'email'    => 'required|email',
+        ]);
+        if ($v->fails()) return $this->respondNotFound($v->errors()->first());
+
+        if( $userID = $this->user->getUserIdByEmail($request->get('email')) ) {
+            if ( Auth::loginUsingId($userID) ) {
+                // Authentication passed...
+                $user = Auth::guard()->user();
+                $user->api_token = str_random(60);
+                $user->save();
+                return $this->respond(Auth::guard()->user());
+            }
+            return $this->respondNotFound('User Not Found!');
+        } else {
+            $v = Validator::make($request->all(), [
+                'name' => 'required',
+                'phone' => 'required|unique:users,phone',
+                'loan_term' => 'required',
+                'interest_rate' => 'required',
+            ]);
+            if ($v->fails()) return $this->respondNotFound($v->errors()->first());
+
+            $user = $this->user->create($request->all());
+            if ( Auth::loginUsingId($user->id) ) {
+                // Authentication passed...
+                $user = Auth::guard()->user();
+                $user->api_token = str_random(60);
+                $user->save();
+                return $this->respond(Auth::guard()->user());
+            }
+        }
         return $this->respondWithSuccess('The user information has been created');
     }
 
