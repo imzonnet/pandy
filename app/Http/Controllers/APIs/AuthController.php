@@ -79,7 +79,7 @@ class AuthController extends APIController {
                 $user = Auth::guard()->user();
                 $user->api_token = str_random(60);
                 $user->save();
-                return $this->respond(Auth::guard()->user());
+                return $this->respondWithSuccess(Auth::guard()->user());
             }
             return $this->respondNotFound('User Not Found!');
         } else {
@@ -97,7 +97,7 @@ class AuthController extends APIController {
                 $user = Auth::guard()->user();
                 $user->api_token = str_random(60);
                 $user->save();
-                return $this->respond(Auth::guard()->user());
+                return $this->respondWithSuccess(Auth::guard()->user());
             }
         }
         return $this->respondWithSuccess('The user information has been created');

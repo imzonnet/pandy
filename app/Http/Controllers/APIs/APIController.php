@@ -36,17 +36,15 @@ class APIController extends Controller {
     public function respondWithError($message)
     {
         return $this->respond([
-            'error' => [
-                'message' => $message,
-                'status_code' => $this->getStatusCode()
-            ]
+            'status_code' => $this->getStatusCode(),
+            'error' => $message,
         ]);
     }
     public function respondWithSuccess($message)
     {
         return $this->respond([
             'status_code' => $this->getStatusCode(),
-            'message' => $message
+            'result' => $message
         ]);
     }
 
