@@ -19,10 +19,10 @@ class CreateUsersTable extends Migration
             $table->string('password', 60);
             $table->integer('group')->default(0);
             $table->string('phone');
-            $table->decimal('loan_amount');
-            $table->decimal('interest_rate');
-            $table->decimal('switching_costs');
-            $table->decimal('ongoing_costs');
+            $table->decimal('loan_amount', 12);
+            $table->decimal('interest_rate', 12);
+            $table->decimal('switching_costs', 12);
+            $table->decimal('ongoing_costs', 12);
             $table->integer('loan_term');
             $table->string('api_token', 60);
             $table->rememberToken();

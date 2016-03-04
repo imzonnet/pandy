@@ -15,10 +15,10 @@ class CreateBanks extends Migration
         Schema::create('banks', function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->decimal('interest_rate');
-            $table->decimal('comparison_rate');
-            $table->decimal('annual_fees');
-            $table->decimal('monthly_fees');
+            $table->decimal('interest_rate', 12);
+            $table->decimal('comparison_rate', 12);
+            $table->decimal('annual_fees', 12);
+            $table->decimal('monthly_fees', 12);
             $table->string('special');
             $table->timestamps();
         });
