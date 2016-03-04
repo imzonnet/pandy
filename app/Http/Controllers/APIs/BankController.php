@@ -76,6 +76,9 @@ class BankController extends APIController {
             $interestRate = $request->get('interest_rate', $user->interest_rate);
             $loanTerm = $request->get('loan_term', $user->loan_term);
             $extraPayment = (float)$request->get('extra_payment', 0);
+            if( (int)$loanAmount < 1 || (int)$loanTerm < 1  ) {
+                return $this->setStatusCode(401)->respondWithError("Please update loan amount and loan term");
+            }
 
             /** Calc */
             $oldMonthlyPayment = $this->bankHelper->monthlyPayment($interestRate, $loanTerm, $loanAmount);
