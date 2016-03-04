@@ -146,11 +146,12 @@ class BankController extends APIController {
             return $this->respondWithSuccess([
                 'loan_amount' => round($loanAmount, 2),
                 'loan_term' => round($loanTerm, 2),
-                'current_month_payment' => round($currentMonth, 2),
-                'interest_rate' => (float)$interestRate,
+                'current_month_payment' => (int)$currentMonth,
+                'interest_rate' => round($interestRate, 2),
                 'interest_payment' => round($interestPayment, 2),
                 'principal_payment' => round($principalPayment, 2),
                 'monthly_payment' => round($currentMonthlyPayment, 2),
+                'extra_payment' => $extraPayment
             ]);
         } catch(Exception $e) {
             return $this->respondWithError($e->getMessage());
