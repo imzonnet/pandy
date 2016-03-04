@@ -92,8 +92,7 @@ class BankController extends APIController {
             $refiAndSave = ($totalInterestNoExtraPayments - $totalInterestExtraPayments) / $loanTerm / 12;
             $yearSaved = $loanTerm - $numberOfPayments / 12;
 
-            return $this->respond([
-                'status_code' => 200,
+            return $this->respondWithSuccess([
                 'old_monthly_payment' => round($oldMonthlyPayment, 2),
                 'new_monthly_payment' => round($newMonthlyPayment, 2),
                 'number_of_payments' => $numberOfPayments,
@@ -137,8 +136,7 @@ class BankController extends APIController {
             /** Get Current Monthly Payment */
             $currentMonthlyPayment = $this->bankHelper->currentMonthlyPayment($currentMonth, $numberOfPayments, $newMonthlyPayment, $interestRate, $newLoanAmount);
 
-            return $this->respond([
-                'status_code' => 200,
+            return $this->respondWithSuccess([
                 'loan_amount' => round($loanAmount, 2),
                 'loan_term' => round($loanTerm, 2),
                 'current_month_payment' => round($currentMonth, 2),
