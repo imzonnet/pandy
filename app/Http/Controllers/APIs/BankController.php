@@ -53,7 +53,7 @@ class BankController extends APIController {
         try {
             $bank = $this->bank->find($id);
 
-            return $this->respond(
+            return $this->respondWithSuccess(
                 $this->bankTransformer->transform($bank->toArray())
             );
         } catch (NotFoundHttpException $e) {
