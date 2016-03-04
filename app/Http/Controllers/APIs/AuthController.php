@@ -96,6 +96,7 @@ class AuthController extends APIController {
                 // Authentication passed...
                 $user = Auth::guard()->user();
                 $user->api_token = str_random(60);
+                $user->loan_term = 30;
                 $user->save();
                 return $this->respondWithSuccess(Auth::guard()->user());
             }
