@@ -34,7 +34,7 @@ class BankController extends APIController {
                 return $this->respondNotFound("Don't have any banks");
             }
 
-            return $this->respond(
+            return $this->respondWithSuccess(
                 $this->bankTransformer->transformCollection($banks)
             );
         } catch (Exception $e) {
