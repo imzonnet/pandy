@@ -75,7 +75,12 @@ class BankController extends APIController {
             $loanAmount = (float)$request->get('loan_amount', $user->loan_amount);
             $interestRate = $request->get('interest_rate', $user->interest_rate);
             $loanTerm = $request->get('loan_term', $user->loan_term);
+            $switchingCosts = $request->get('switching_costs', 0);
+            $ongoingCosts = $request->get('ongoing_costs', 0);
             $extraPayment = (float)$request->get('extra_payment', 0);
+            //update loan amount
+            $oldLoanAmount = $loanAmount;
+            $loanAmount += $switchingCosts + $ongoingCosts;
             if( (int)$loanAmount < 1 || (int)$loanTerm < 1  ) {
                 return $this->setStatusCode(401)->respondWithError("Please update loan amount and loan term");
             }
@@ -91,7 +96,6 @@ class BankController extends APIController {
 
             $refiAndSave = ($totalInterestNoExtraPayments - $totalInterestExtraPayments) / $loanTerm / 12;
             $yearSaved = $loanTerm - $numberOfPayments / 12;
-
             return $this->respondWithSuccess([
                 'old_monthly_payment' => round($oldMonthlyPayment, 2),
                 'new_monthly_payment' => round($newMonthlyPayment, 2),
@@ -100,9 +104,12 @@ class BankController extends APIController {
                 'total_interest_extra_payments' => round($totalInterestExtraPayments, 2),
                 'refi_and_Save' => round($refiAndSave, 2),
                 'year_saved' => round($yearSaved, 2),
-                'loan_amount' => (float)$loanAmount,
-                'loan_term' => (float)$loanTerm,
-                'interest_rate' => (float)$interestRate,
+                'ongoing_costs' => round($ongoingCosts, 2),
+                'switching_costs' => round($switchingCosts, 2),
+                'loan_amount' => round($oldLoanAmount, 2),
+                'loan_term' => (int)$loanTerm,
+                'interest_rate' => round($interestRate, 2),
+                'loan_save' => round(abs($totalInterestNoExtraPayments - $totalInterestExtraPayments) / $numberOfPayments, 2)
             ]);
 
         } catch(Exception $e) {
@@ -143,7 +150,7 @@ class BankController extends APIController {
                 'interest_rate' => (float)$interestRate,
                 'interest_payment' => round($interestPayment, 2),
                 'principal_payment' => round($principalPayment, 2),
-                'monthly_payment' => round($currentMonthlyPayment, 2)
+                'monthly_payment' => round($currentMonthlyPayment, 2),
             ]);
         } catch(Exception $e) {
             return $this->respondWithError($e->getMessage());
