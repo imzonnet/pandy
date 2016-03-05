@@ -28,10 +28,10 @@
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->phone }}</td>
                                     <td>
-                                        {!! Form::open(['route' => ['user.destroy', $user->id], 'method' => 'delete', 'class' => 'form-delete']) !!}
+                                        {!! Form::open(['route' => ['user.destroy', $user->id], 'method' => 'delete']) !!}
                                         <div class="btn-group">
                                             <a href="{{ route('user.edit', [$user->id]) }}" class="btn btn-info btn-sm"><i class="fa fa-pencil"></i></a>
-                                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                            <button type="submit" class="form-delete btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                                         </div>
                                         {!! Form::close() !!}
                                     </td>
