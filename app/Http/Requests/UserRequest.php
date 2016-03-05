@@ -21,12 +21,19 @@ class UserRequest extends Request
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|unique:users,phone',
             'loan_term' => 'required',
             'interest_rate' => 'required',
         ];
+
+        if( $this->method() == 'PUT' ) {
+            $rules['email'] .= ','.$this->get('id');
+            $rules['phone'] .= ','.$this->get('id');
+        }
+
+        return $rules;
     }
 }

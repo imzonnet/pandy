@@ -67,7 +67,7 @@ class UserController extends Controller
     public function update($id, UserRequest $request) {
         $user = $this->user->find($id);
         $this->user->update($user, $request->all());
-        return redirect(route('user.index', $id))->with('success_message', 'The user has been updated');
+        return redirect(route('user.index'))->with('success_message', 'The user has been updated');
     }
 
     /**
