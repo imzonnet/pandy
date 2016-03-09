@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'admin@pandy.com', 'name' => 'Pandy'],
+    'from' => ['address' => 'jayden.vecchio@discoveryfinance.net.au', 'name' => 'Pandy'],
 
     /*
     |--------------------------------------------------------------------------

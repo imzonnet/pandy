@@ -121,7 +121,7 @@ class AuthController extends APIController {
         $user['option'] = $request->get('option');
 
         if(Mail::send('emails.contact', ['user' => $user], function ($m) use ($user) {
-            $m->to('vnzacky39@gmail.com')->subject('Pandy - Contact to discuss');
+            $m->to(env('ADMIN_EMAIL', 'vnzacky39@gmail.com'))->subject('Pandy - Contact to discuss');
         })) {
             return $this->respondWithSuccess('The email has been sent');
         }
