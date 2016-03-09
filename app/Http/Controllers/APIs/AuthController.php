@@ -4,6 +4,7 @@
 use App\Http\Requests\InfoRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Repositories\UserRepository;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -120,12 +121,15 @@ class AuthController extends APIController {
         $user['phone'] = $request->get('phone');
         $user['option'] = $request->get('option');
 
-        if(Mail::send('emails.contact', ['user' => $user], function ($m) use ($user) {
-            $m->to(env('ADMIN_EMAIL', 'vnzacky39@gmail.com'))->subject('Pandy - Contact to discuss');
-        })) {
+        try {
+            Mail::send('emails.contact', ['user' => $user], function ($m) use ($user) {
+                $m->to(env('ADMIN_EMAIL', 'vnzacky39@gmail.com'))->subject('Pandy - Contact to discuss');
+            });
             return $this->respondWithSuccess('The email has been sent');
-        }
 
+        } catch(Exception $e) {
+            return $this->respondWithError($e->getMessage());
+        }
     }
 
 }
