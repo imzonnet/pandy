@@ -5,6 +5,7 @@ use App\Http\Requests\InfoRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
@@ -102,6 +103,29 @@ class AuthController extends APIController {
             }
         }
         return $this->respondWithSuccess('The user information has been created');
+    }
+
+    public function sendEmail(Request $request)
+    {
+        $v = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'phone' => 'required',
+            'name' => 'required',
+            'option' => 'required'
+        ]);
+        if ($v->fails()) return $this->respondNotFound($v->errors()->first());
+
+        $user['email'] = $request->get('email');
+        $user['name'] = $request->get('name');
+        $user['phone'] = $request->get('phone');
+        $user['option'] = $request->get('option');
+
+        if(Mail::send('emails.contact', ['user' => $user], function ($m) use ($user) {
+            $m->to('vnzacky39@gmail.com')->subject('Pandy - Contact to discuss');
+        })) {
+            return $this->respondWithSuccess('The email has been sent');
+        }
+
     }
 
 }

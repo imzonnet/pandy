@@ -109,6 +109,7 @@ class BankController extends APIController {
                 'loan_amount' => round($oldLoanAmount, 2),
                 'loan_term' => (int)$loanTerm,
                 'interest_rate' => round($interestRate, 2),
+                'extra_payment' => round($extraPayment, 2),
                 'loan_save' => round(abs($totalInterestNoExtraPayments - $totalInterestExtraPayments) / $numberOfPayments, 2)
             ]);
 

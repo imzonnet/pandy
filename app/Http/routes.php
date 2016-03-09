@@ -54,5 +54,6 @@ Route::group(['namespace' => 'APIs', 'prefix' => 'api/v1', 'as' => 'api.v1.', 'm
         /** Loan */
         Route::get('loan/save', ['as' => 'loan.save', 'uses' => 'BankController@getBankSave']);
         Route::get('loan/calculator', ['as' => 'loan.calculator', 'uses' => 'BankController@loanCalculator']);
+        Route::post('send-mail', 'AuthController@sendEmail');
     });
 });
