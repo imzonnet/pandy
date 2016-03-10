@@ -128,6 +128,11 @@ class BankController extends APIController {
             $loanTerm = $request->get('loan_term', $user->loan_term);
             $extraPayment = (float)$request->get('extra_payment', 0);
             $currentMonth = (float)$request->get('current_month_payment', 1);
+            $switchingCosts = $request->get('switching_costs', 0);
+            $ongoingCosts = $request->get('ongoing_costs', 0);
+            //update loan amount
+            $oldLoanAmount = $loanAmount;
+            $loanAmount += $switchingCosts + $ongoingCosts;
 
             /** Calc */
             $oldMonthlyPayment = $this->bankHelper->monthlyPayment($interestRate, $loanTerm, $loanAmount);
@@ -145,7 +150,9 @@ class BankController extends APIController {
             $currentMonthlyPayment = $this->bankHelper->currentMonthlyPayment($currentMonth, $numberOfPayments, $newMonthlyPayment, $interestRate, $newLoanAmount);
 
             return $this->respondWithSuccess([
-                'loan_amount' => round($loanAmount, 2),
+                'loan_amount' => round($oldLoanAmount, 2),
+                'switching_costs' => round($switchingCosts, 2),
+                'ongoing_costs' => round($ongoingCosts, 2),
                 'loan_term' => round($loanTerm, 2),
                 'current_month_payment' => (int)$currentMonth,
                 'interest_rate' => round($interestRate, 2),
